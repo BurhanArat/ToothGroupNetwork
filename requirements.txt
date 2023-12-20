@@ -7,4 +7,4 @@ easydict==1.11
 torch==2.1.0+cu121
 torchaudio==2.1.0+cu121
 torchdata==0.7.0
--e "git+https://github.com/Silverster98/pointops" 
+-e "git+https://github.com/Silverster98/pointops#egg=pointops" 
