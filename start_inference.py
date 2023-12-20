@@ -34,27 +34,25 @@ def preprocess(orig_input,save_path_pre,split_txt_path):
         if not os.path.exists(os.path.join(save_path_pre,dirs)):
             os.makedirs(os.path.join(save_path_pre,dirs))
         
-        if not os.path.exists(os.path.join(save_path_pre,dirs)):
-          sub_dirs = os.listdir(os.path.join(orig_input,dirs))
-          for sub_dir in sub_dirs:
-              if (dirs + '_UpperJaw.stl') == sub_dir:
-                  mesh = trimesh.load(os.path.join(orig_input,os.path.join(dirs,sub_dir)))
+        
+        sub_dirs = os.listdir(os.path.join(orig_input,dirs))
+        for sub_dir in sub_dirs:
+            if (dirs + '_UpperJaw.stl') == sub_dir:
+                mesh = trimesh.load(os.path.join(orig_input,os.path.join(dirs,sub_dir)))
 
-                  rot_matrix_y = trimesh.transformations.rotation_matrix(angle*18, direction_y, center)
+                rot_matrix_y = trimesh.transformations.rotation_matrix(angle*18, direction_y, center)
 
-                  mesh.apply_transform(rot_matrix_y)
+                mesh.apply_transform(rot_matrix_y)
 
-                  name = sub_dir.split('.')[0]
-                  mesh.export(os.path.join(save_path_pre,os.path.join(dirs,name)+'.obj'))
+                name = sub_dir.split('.')[0]
+                mesh.export(os.path.join(save_path_pre,os.path.join(dirs,name)+'.obj'))
 
 
-              elif((dirs + '_LowerJaw.stl') == sub_dir):
+            elif((dirs + '_LowerJaw.stl') == sub_dir):
 
-                  mesh = trimesh.load(os.path.join(orig_input,os.path.join(dirs,sub_dir)))
-                  name = sub_dir.split('.')[0]
-                  mesh.export(os.path.join(save_path_pre,os.path.join(dirs,name)+'.obj'))
-        else:
-          print(dirs + '-- Exists')
+                mesh = trimesh.load(os.path.join(orig_input,os.path.join(dirs,sub_dir)))
+                name = sub_dir.split('.')[0]
+                mesh.export(os.path.join(save_path_pre,os.path.join(dirs,name)+'.obj'))
 
 
     text_file = open(os.path.join(split_txt_path, 'basename.txt'), "a")
