@@ -1,16 +1,18 @@
-# ToothGroupNetwork
-- Team CGIP
-- Ho Yeon Lim and Min Chang Kim 
+We are only using inference code for the model. The model is arranged to fit for our datastructure and dataset.
+Requirements are also added to this repo.
 
-# Notice
-- Please press the star!
-- This repository contains the code for the tooth segmentation algorithm that won first place at [Miccai2022 3D Teeth Scan Segmentation and Labeling Challenge.](https://3dteethseg.grand-challenge.org/evaluation/challenge/leaderboard/)
-- Official Paper for Challenge: [3DTeethSeg'22: 3D Teeth Scan Segmentation and Labeling Challenge.](https://arxiv.org/abs/2305.18277)
-- We used the dataset shared in [the challenge git repository.](https://github.com/abenhamadou/3DTeethSeg22_challenge)
-- If you only want the inference code, or if you want to use the same checkpoints that we used in the challenge, you can jump to [challenge_branch](https://github.com/limhoyeon/ToothGroupNetwork/tree/challenge_branch) in this repository.
-- Most of the code has been modified. It may be significantly different from the code you downloaded before June 20th. If you downloaded this repository, we recommend download it again.
-- There may be a lot of errors in the initial code. If you encounter any errors, please post them on the issue board, and we will promptly address and fix them(Im sorry for the slow resposes to issues because of personal reasons)...
-- Please post your questions to the issue board as it's hard to see them in emails.
+Only the given function should be enough for both preprocessing and segmentation.
+
+!python start_inference.py \
+ --split_txt_path /content/ \
+ --save_path '/content/save_path' \
+ --model_name tgnet \
+ --checkpoint_path "/content/ckpts(new)/tgnet_fps" \
+ --checkpoint_path_bdl "/content/ckpts(new)/tgnet_bdl" \
+ --save_path_pre "/content/save_path_pre" \
+ --orig_input '/content/drive/MyDrive/training_data/open_models'
+
+
 
 # Dataset
 - We used the dataset shared in [the challenge git repository](https://github.com/abenhamadou/3DTeethSeg22_challenge). For more information about the data, check out the link.
