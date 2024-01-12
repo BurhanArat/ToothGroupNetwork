@@ -70,7 +70,7 @@ class ScanSegmentation():  # SegmentationAlgorithm is not inherited in this clas
             try:
                 with open(scan_path, 'r') as f:
                     jaw = f.readline()[2:-1]
-                if jaw not in ["UpperJaw", "LowerJaw"]:
+                if jaw not in ["upper", "lower"]:
                     return None
             except Exception as e:
                 print(str(e))
@@ -96,9 +96,9 @@ class ScanSegmentation():  # SegmentationAlgorithm is not inherited in this clas
             #mesh = trimesh.load(scan_path, process=False)
             pred_result = self.chl_pipeline(scan_path)
             jaw = self.get_jaw(scan_path)
-            if jaw == "LowerJaw":
+            if jaw == "upper":
                 pred_result["sem"][pred_result["sem"]>0] += 20
-            elif jaw=="UpperJaw":
+            elif jaw=="lower":
                 pass
             else:
                 raise "jaw name error"
