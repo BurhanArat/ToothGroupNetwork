@@ -21,21 +21,21 @@ for dirs in dir_list:
         sub_dirs = os.listdir(os.path.join(args.input_path,dirs))
         for sub_dir in sub_dirs:
             if((dirs + '_lower.stl') == sub_dir):
+                if not os.path.exists(os.path.join(args.output_path,dirs)+ '_lower.obj'):
+                    name = sub_dir.split('.')[0]
+                    mesh = trimesh.load(os.path.join(args.input_path,os.path.join(dirs,sub_dir)))
 
-                name = sub_dir.split('.')[0]
-                mesh = trimesh.load(os.path.join(args.input_path,os.path.join(dirs,sub_dir)))
+                    if mesh.is_watertight:
+                        mesh.export(os.path.join(args.output_path,os.path.join(dirs,sub_dir)+args.data_extension))
+                    else:
+                        tin = PyTMesh(False)
 
-                if mesh.is_watertight:
-                    mesh.export(os.path.join(args.output_path,os.path.join(dirs,sub_dir)+args.data_extension))
-                else:
-                    tin = PyTMesh(False)
+                        tin.load_file(os.path.join(args.input_path,os.path.join(dirs,sub_dir)))
+                        tin.fill_small_boundaries(nbe=0, refine=True)
+                        tin.clean(max_iters=5, inner_loops=3)
+                        tin.save_file(os.path.join(args.output_path,os.path.join(dirs,sub_dir)+args.data_extension))
 
-                    tin.load_file(os.path.join(args.input_path,os.path.join(dirs,sub_dir)))
-                    tin.fill_small_boundaries(nbe=0, refine=True)
-                    tin.clean(max_iters=5, inner_loops=3)
-                    tin.save_file(os.path.join(args.output_path,os.path.join(dirs,sub_dir)+args.data_extension))
-
-                    del tin
+                        del tin
 
                 
 
