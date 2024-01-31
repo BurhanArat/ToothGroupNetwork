@@ -10,13 +10,12 @@ parser.add_argument('--output_path', required=True  ,type=str,help = "input data
 parser.add_argument('--data_extension', default='.obj'  ,type=str,help = "input data folder path")
 args = parser.parse_args()
 
-dir_list = os.listdir(orig_input)
+dir_list = os.listdir(args.input_path)
 
 for dirs in dir_list:
 
         if not os.path.exists(os.path.join(args.output_path,dirs)):
             os.makedirs(os.path.join(args.output_path,dirs))
-        
         
         sub_dirs = os.listdir(os.path.join(args.input_path,dirs))
         for sub_dir in sub_dirs:
@@ -26,28 +25,14 @@ for dirs in dir_list:
                     mesh = trimesh.load(os.path.join(args.input_path,os.path.join(dirs,sub_dir)))
 
                     if mesh.is_watertight:
-                        mesh.export(os.path.join(args.output_path,os.path.join(dirs,sub_dir)+args.data_extension))
+                        mesh.export(os.path.join(args.output_path,os.path.join(dirs,name)+args.data_extension))
+                        print(name +' is watertight')
                     else:
                         tin = PyTMesh(False)
 
                         tin.load_file(os.path.join(args.input_path,os.path.join(dirs,sub_dir)))
                         tin.fill_small_boundaries(nbe=0, refine=True)
-                        tin.clean(max_iters=5, inner_loops=3)
-                        tin.save_file(os.path.join(args.output_path,os.path.join(dirs,sub_dir)+args.data_extension))
-
+                        #tin.clean(max_iters=3, inner_loops=1)
+                        tin.save_file(os.path.join(args.output_path,os.path.join(dirs,name)+args.data_extension))
+                        print(name +' is closed')
                         del tin
-
-                
-
-
-
-
-
-                
-
-
-
-
-
-
-
