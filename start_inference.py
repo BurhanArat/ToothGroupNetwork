@@ -17,16 +17,17 @@ parser.add_argument('--model_name', type=str, default="tgnet", help = "model nam
 parser.add_argument('--checkpoint_path', default="ckpts/tgnet_fps" ,type=str,help = "checkpoint path.")
 parser.add_argument('--checkpoint_path_bdl', default="ckpts/tgnet_bdl" ,type=str,help = "checkpoint path(for tgnet_bdl).")
 parser.add_argument('--save_path_pre', required=True ,type=str,help = "save path for preprocessed obj's and basename.txt")
-parser.add_argument('--orig_input', required=True,type=str,help = "STL inputs")
+parser.add_argument('--orig_input_lower', required=True,type=str,help = "lower STL inputs")
+parser.add_argument('--orig_input_upper', required=True,type=str,help = "upper STL inputs")
 args = parser.parse_args()
 
 
-def preprocess(orig_input,save_path_pre,split_txt_path):
+def preprocess(orig_input_lower,orig_input_upper,save_path_pre,split_txt_path):
 
-    dir_list = os.listdir(orig_input)
+    dir_list = os.listdir(orig_input_lower)
 
     angle = math.pi/18
-    direction_y = [1, 0, 0]
+    direction_y = [0, 1, 0]
     center = [0, 0, 0]
 
     for dirs in dir_list:
@@ -35,25 +36,23 @@ def preprocess(orig_input,save_path_pre,split_txt_path):
             os.makedirs(os.path.join(save_path_pre,dirs))
         
         
-        sub_dirs = os.listdir(os.path.join(orig_input,dirs))
+        sub_dirs = os.listdir(os.path.join(orig_input_lower,dirs))
         for sub_dir in sub_dirs:
-            if (dirs + '_upper.stl') == sub_dir:
-                mesh = trimesh.load(os.path.join(orig_input,os.path.join(dirs,sub_dir)))
+          name = sub_dir.split('_')[0]
+          mesh_upper = trimesh.load(os.path.join(orig_input_upper,os.path.join(dirs,name)+'_upper.obj'))
 
-                rot_matrix_y = trimesh.transformations.rotation_matrix(angle*18, direction_y, center)
+          rot_matrix_y = trimesh.transformations.rotation_matrix(angle*18, direction_y, center)
 
-                mesh.apply_transform(rot_matrix_y)
+          mesh_upper.apply_transform(rot_matrix_y)
 
-                name = sub_dir.split('.')[0]
-                mesh.export(os.path.join(save_path_pre,os.path.join(dirs,name)+'.obj'))
+          
+          mesh_upper.export(os.path.join(save_path_pre,os.path.join(dirs,name)+'_upper.obj'))
 
+          mesh_lower = trimesh.load(os.path.join(orig_input_lower,os.path.join(dirs,name)+'_lower.obj'))
+          mesh_lower.export(os.path.join(save_path_pre,os.path.join(dirs,name)+'_lower.obj'))
 
-            elif((dirs + '_lower.stl') == sub_dir):
-
-                mesh = trimesh.load(os.path.join(orig_input,os.path.join(dirs,sub_dir)))
-                name = sub_dir.split('.')[0]
-                mesh.export(os.path.join(save_path_pre,os.path.join(dirs,name)+'.obj'))
-
+          del mesh_upper
+          del mesh_lower
 
     text_file = open(os.path.join(split_txt_path, 'basename.txt'), "a")
 
@@ -64,7 +63,7 @@ def preprocess(orig_input,save_path_pre,split_txt_path):
     text_file.close()
 
 
-preprocess(args.orig_input,args.save_path_pre,args.split_txt_path)
+preprocess(args.orig_input_lower, args.orig_input_upper, args.save_path_pre, args.split_txt_path)
 
 split_base_name_ls = []
 if args.split_txt_path != "":
