@@ -24,32 +24,34 @@ args = parser.parse_args()
 
 def preprocess(orig_input_lower,orig_input_upper,save_path_pre,split_txt_path):
 
+    if not os.path.exists(save_path_pre):
+      os.mkdir(save_path_pre)
+
+
     dir_list = os.listdir(orig_input_lower)
 
     angle = math.pi/18
     direction_y = [0, 1, 0]
     center = [0, 0, 0]
-
+    
+    
     for dirs in dir_list:
 
         if not os.path.exists(os.path.join(save_path_pre,dirs)):
-            os.makedirs(os.path.join(save_path_pre,dirs))
+          
         
-        
-        sub_dirs = os.listdir(os.path.join(orig_input_lower,dirs))
-        for sub_dir in sub_dirs:
-          name = sub_dir.split('_')[0]
-          mesh_upper = trimesh.load(os.path.join(orig_input_upper,os.path.join(dirs,name)+'_upper.obj'))
+          name = dirs.split('_')[0]
+          mesh_upper = trimesh.load(os.path.join(orig_input_upper,name)+'_upper.obj')
 
           rot_matrix_y = trimesh.transformations.rotation_matrix(angle*18, direction_y, center)
 
           mesh_upper.apply_transform(rot_matrix_y)
 
           
-          mesh_upper.export(os.path.join(save_path_pre,os.path.join(dirs,name)+'_upper.obj'))
+          mesh_upper.export(os.path.join(save_path_pre,name)+'_upper.obj')
 
-          mesh_lower = trimesh.load(os.path.join(orig_input_lower,os.path.join(dirs,name)+'_lower.obj'))
-          mesh_lower.export(os.path.join(save_path_pre,os.path.join(dirs,name)+'_lower.obj'))
+          mesh_lower = trimesh.load(os.path.join(orig_input_lower,name)+'_lower.obj')
+          mesh_lower.export(os.path.join(save_path_pre,name)+'_lower.obj')
 
           del mesh_upper
           del mesh_lower
@@ -57,7 +59,9 @@ def preprocess(orig_input_lower,orig_input_upper,save_path_pre,split_txt_path):
     text_file = open(os.path.join(split_txt_path, 'basename.txt'), "a")
 
     for dirs in dir_list:
-        text_file.write(dirs)
+      if '_lower' in dirs:
+        name = dirs.split('_')[0]
+        text_file.write(name)
         text_file.write('\n')
 
     text_file.close()
@@ -72,19 +76,26 @@ if args.split_txt_path != "":
         line = f.readline()
         if not line: break
         split_base_name_ls.append(line.strip())
+
     f.close()
 
 
 stl_path_ls = []
-for dir_path in [
-    x[0] for x in os.walk(args.save_path_pre)
-    ][1:]:
-    if os.path.basename(dir_path) in split_base_name_ls: 
-        stl_path_ls += glob(os.path.join(dir_path,"*.obj"))
+dir_paths = os.listdir(args.save_path_pre)
+for dir_path in dir_paths:
+    name = dir_path.split('_')[0]
+    if name in split_base_name_ls: 
+        stl_path_ls.append(os.path.join(args.save_path_pre,dir_path))
 
+print(stl_path_ls)
 pred_obj = ScanSegmentation(make_inference_pipeline(args.model_name, [args.checkpoint_path+".h5", args.checkpoint_path_bdl+".h5"]))
 os.makedirs(args.save_path, exist_ok=True)
 for i in range(len(stl_path_ls)):
     print(f"Processing: ", i,":",stl_path_ls[i])
     base_name = os.path.basename(stl_path_ls[i]).split(".")[0]
-    pred_obj.process(stl_path_ls[i], os.path.join(args.save_path, os.path.basename(stl_path_ls[i]).replace(".obj", ".json")))
+    print('base_name',base_name)
+    if '_lower' in base_name:
+      pred_obj.process(stl_path_ls[i], os.path.join(args.save_path, os.path.basename(stl_path_ls[i]).replace(".obj", ".json")))
+    elif '_upper' in base_name:
+      save_path = os.path.join(args.save_path, os.path.basename(stl_path_ls[i])).replace('/lower/', '/upper/')
+      pred_obj.process(stl_path_ls[i], save_path.replace(".obj", ".json"))
