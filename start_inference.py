@@ -22,7 +22,7 @@ parser.add_argument('--orig_input_upper', required=True,type=str,help = "upper S
 args = parser.parse_args()
 
 
-def preprocess(orig_input_lower,orig_input_upper,save_path_pre,split_txt_path):
+def preprocess(orig_input_lower,orig_input_upper,save_path_pre,split_txt_path,save_path):
 
     if not os.path.exists(save_path_pre):
       os.mkdir(save_path_pre)
@@ -37,9 +37,18 @@ def preprocess(orig_input_lower,orig_input_upper,save_path_pre,split_txt_path):
     
     for dirs in dir_list:
 
-        if not os.path.exists(os.path.join(save_path_pre,dirs)):
-          
+        json = dirs.replace('.obj', '.json')
+        if not os.path.exists(os.path.join(save_path,json)):
+
+          name = dirs.split('_')[0]
         
+          mesh_lower = trimesh.load(os.path.join(orig_input_lower,name)+'_lower.obj')
+          mesh_lower.export(os.path.join(save_path_pre,name)+'_lower.obj')
+          del mesh_lower
+        else:
+          print('skipped -- ', dirs)
+        
+        if not os.path.exists(os.path.join(save_path.replace('/lower/', '/upper/'),json.replace('_lower','_upper'))):
           name = dirs.split('_')[0]
           mesh_upper = trimesh.load(os.path.join(orig_input_upper,name)+'_upper.obj')
 
@@ -49,12 +58,12 @@ def preprocess(orig_input_lower,orig_input_upper,save_path_pre,split_txt_path):
 
           
           mesh_upper.export(os.path.join(save_path_pre,name)+'_upper.obj')
-
-          mesh_lower = trimesh.load(os.path.join(orig_input_lower,name)+'_lower.obj')
-          mesh_lower.export(os.path.join(save_path_pre,name)+'_lower.obj')
-
           del mesh_upper
-          del mesh_lower
+        else:
+          print('skipped -- ', dirs.replace('_lower', '_upper'))
+
+          
+          
 
     text_file = open(os.path.join(split_txt_path, 'basename.txt'), "a")
 
@@ -67,7 +76,7 @@ def preprocess(orig_input_lower,orig_input_upper,save_path_pre,split_txt_path):
     text_file.close()
 
 
-preprocess(args.orig_input_lower, args.orig_input_upper, args.save_path_pre, args.split_txt_path)
+preprocess(args.orig_input_lower, args.orig_input_upper, args.save_path_pre, args.split_txt_path, args.save_path)
 
 split_base_name_ls = []
 if args.split_txt_path != "":
@@ -91,11 +100,12 @@ print(stl_path_ls)
 pred_obj = ScanSegmentation(make_inference_pipeline(args.model_name, [args.checkpoint_path+".h5", args.checkpoint_path_bdl+".h5"]))
 os.makedirs(args.save_path, exist_ok=True)
 for i in range(len(stl_path_ls)):
-    print(f"Processing: ", i,":",stl_path_ls[i])
-    base_name = os.path.basename(stl_path_ls[i]).split(".")[0]
-    print('base_name',base_name)
-    if '_lower' in base_name:
-      pred_obj.process(stl_path_ls[i], os.path.join(args.save_path, os.path.basename(stl_path_ls[i]).replace(".obj", ".json")))
-    elif '_upper' in base_name:
-      save_path = os.path.join(args.save_path, os.path.basename(stl_path_ls[i])).replace('/lower/', '/upper/')
-      pred_obj.process(stl_path_ls[i], save_path.replace(".obj", ".json"))
+
+      print(f"Processing: ", i,":",stl_path_ls[i])
+      base_name = os.path.basename(stl_path_ls[i]).split(".")[0]
+      print('base_name',base_name)
+      if '_lower' in base_name:
+        pred_obj.process(stl_path_ls[i], os.path.join(args.save_path, os.path.basename(stl_path_ls[i]).replace(".obj", ".json")))
+      elif '_upper' in base_name:
+        save_path = os.path.join(args.save_path, os.path.basename(stl_path_ls[i])).replace('/lower/', '/upper/')
+        pred_obj.process(stl_path_ls[i], save_path.replace(".obj", ".json"))
