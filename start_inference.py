@@ -34,7 +34,7 @@ def preprocess(orig_input_lower,orig_input_upper,save_path_pre,split_txt_path,sa
     direction_y = [0, 1, 0]
     center = [0, 0, 0]
     
-    
+    print(len(dir_list))
     for dirs in dir_list:
 
         json = dirs.replace('.obj', '.json')
@@ -66,13 +66,15 @@ def preprocess(orig_input_lower,orig_input_upper,save_path_pre,split_txt_path,sa
           
 
     text_file = open(os.path.join(split_txt_path, 'basename.txt'), "a")
-
-    for dirs in dir_list:
+    txt_dirs = os.listdir(args.save_path_pre)
+    c = 0
+    for dirs in txt_dirs:
       if '_lower' in dirs:
         name = dirs.split('_')[0]
         text_file.write(name)
         text_file.write('\n')
-
+        c += 1
+    print(c)
     text_file.close()
 
 
