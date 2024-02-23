@@ -15,6 +15,7 @@ parser.add_argument('--checkpoint_path', type=str, required=True, help='checkpoi
 parser.add_argument('--checkpoint_path_bdl', type=str, required=True, help='checkpoint_path_bdl it should be tgnet_bdl.h5')
 parser.add_argument('--path_target', type=str, required=True, help='Target Directory ')
 parser.add_argument('--path_df', type=str, required=True, help='Path DataFrame')
+parser.add_argument('--log_path', type=str, required=True, help="Log Path")
 
 opt = parser.parse_args()
 #!python segmentation.py  --path_df="segmentation.csv" --path_target="/content/" --checkpoint_path_bdl="/content/" --checkpoint_path="/content/ckpts(new)/tgnet_fps.h5" --checkpoint_path_bdl="/content/ckpts(new)/tgnet_bdl.h5"
@@ -73,20 +74,35 @@ for row in tqdm(df.iterrows(),desc="Segmentation"):
     jaw=str(row[1]["jaw"])
     id=os.path.splitext(os.path.basename(path_model))[0]
     target_file_path=os.path.join(opt.path_target,id+".json")
+    done=True
+    try:
 
-    mesh=load_obj(path_model,jaw=jaw)
+        mesh=load_obj(path_model,jaw=jaw)
 
-    pred_result=pipeline(mesh)
+        pred_result=pipeline(mesh)
 
-    if jaw=="upper":
-        pred_result["sem"][pred_result["sem"]>0] += 20
+        if jaw=="upper":
+            pred_result["sem"][pred_result["sem"]>0] += 20
 
-    pred_output = {'id_patient': id,
-                    'jaw': jaw,
-                    'labels': pred_result["sem"],
-                    'instances': pred_result["ins"]
-                    }
-    with open(target_file_path, 'w') as fp:
-      json.dump(pred_output, fp, cls=NpEncoder)
+        pred_output = {'id_patient': id,
+                        'jaw': jaw,
+                        'labels': pred_result["sem"],
+                        'instances': pred_result["ins"]
+                        }
+        with open(target_file_path, 'w') as fp:
+        json.dump(pred_output, fp, cls=NpEncoder)
+    except Exception as e :
+        done=False
+        print(e)
+
+    log={
+        
+         "done" : done,
+         "id" : data["id"]
+    }
+    logs.append(log)
+    df_logs=pd.DataFrame(logs)
+
+    df_logs.to_csv(os.path.join(opt.log_path,"./logs.csv"),index=False)
 
 
