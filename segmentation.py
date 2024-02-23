@@ -11,12 +11,13 @@ from tqdm import tqdm
 
 
 parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-parser.add_argument('--checkpoint_path', type=str, required=True, help='checkpoint_path')
-parser.add_argument('--checkpoint_path_bdl', type=str, required=True, help='checkpoint_path_bdl')
+parser.add_argument('--checkpoint_path', type=str, required=True, help='checkpoint_path it should tgnet_fps.h5')
+parser.add_argument('--checkpoint_path_bdl', type=str, required=True, help='checkpoint_path_bdl it should be tgnet_bdl.h5')
 parser.add_argument('--path_target', type=str, required=True, help='Target Directory ')
 parser.add_argument('--path_df', type=str, required=True, help='Path DataFrame')
 
 opt = parser.parse_args()
+#!python segmentation.py  --path_df="segmentation.csv" --path_target="/content/" --checkpoint_path_bdl="/content/" --checkpoint_path="/content/ckpts(new)/tgnet_fps.h5" --checkpoint_path_bdl="/content/ckpts(new)/tgnet_bdl.h5"
 
 
 # Create the pandas DataFrame
@@ -31,7 +32,7 @@ DataFrame Should Be
 """
 model_name="tgnet"
 
-df = pd.DataFrame(opt.path_df, columns=['path_model',"jaw"])
+df=pd.read_csv(opt.path_df, dtype ='str')
 
 angle = math.pi/18
 direction_y = [0, 1, 0]
