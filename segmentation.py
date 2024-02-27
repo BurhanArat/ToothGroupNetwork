@@ -90,7 +90,7 @@ for row in tqdm(df.iterrows(),desc="Segmentation"):
                         'instances': pred_result["ins"]
                         }
         with open(target_file_path, 'w') as fp:
-        json.dump(pred_output, fp, cls=NpEncoder)
+            json.dump(pred_output, fp, cls=NpEncoder)
     except Exception as e :
         done=False
         print(e)
@@ -98,7 +98,7 @@ for row in tqdm(df.iterrows(),desc="Segmentation"):
     log={
         
          "done" : done,
-         "id" : data["id"]
+         "id" : id
     }
     logs.append(log)
     df_logs=pd.DataFrame(logs)
