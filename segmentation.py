@@ -34,7 +34,7 @@ DataFrame Should Be
 model_name="tgnet"
 
 df=pd.read_csv(opt.path_df, dtype ='str')
-
+logs = []
 angle = math.pi/18
 direction_y = [0, 1, 0]
 center = [0, 0, 0]
