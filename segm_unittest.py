@@ -10,7 +10,11 @@ class EnvironmentImportTest(unittest.TestCase):
     # In some cases, trimesh can change vertex order
         path = '/home/burhan_arat/test/deneme.obj'
         path_target='/home/burhan_arat/test/'
+        checkpoint_path = '/home/burhan_arat/segm_ckpt/tgnet_fps.h5'
+        checkpoint_path_bdl = '/home/burhan_arat/segm_ckpt/tgnet_bdl.h5'
         jaw='lower'
+        model_name="tgnet"
+
         tri_mesh_loaded_mesh = trimesh.load_mesh(path, process=False)
 
         vertex_ls = np.array(tri_mesh_loaded_mesh.vertices)
@@ -27,7 +31,7 @@ class EnvironmentImportTest(unittest.TestCase):
         id=os.path.splitext(os.path.basename(path))[0]
         target_file_path=os.path.join(path_target,id+".json")
         done=True
-
+        pipeline=make_inference_pipeline(model_name, [checkpoint_path, checkpoint_path_bdl])
         pred_result=pipeline(mesh)
 
         pred_output = {'id_patient': id,
