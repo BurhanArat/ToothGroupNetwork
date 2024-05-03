@@ -3,6 +3,7 @@ import trimesh
 import os
 import open3d as o3d
 import numpy as np
+from inference_pipelines.inference_pipeline_maker import make_inference_pipeline
 
 class EnvironmentImportTest(unittest.TestCase):
     
