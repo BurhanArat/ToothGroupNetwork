@@ -5,7 +5,7 @@ import open3d as o3d
 
 class EnvironmentImportTest(unittest.TestCase):
     
-    def segmentation_unittest(self):
+    def test_case(self):
     # In some cases, trimesh can change vertex order
         path = '/home/burhan_arat/test/deneme.obj'
         path_target='/home/burhan_arat/test/'
