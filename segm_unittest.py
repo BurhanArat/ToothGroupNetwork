@@ -6,6 +6,16 @@ import numpy as np
 from inference_pipelines.inference_pipeline_maker import make_inference_pipeline
 import json
 
+class NpEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, np.integer):
+            return int(obj)
+        if isinstance(obj, np.floating):
+            return float(obj)
+        if isinstance(obj, np.ndarray):
+            return obj.tolist()
+        return super(NpEncoder, self).default(obj)
+
 class EnvironmentImportTest(unittest.TestCase):
     
     def test_case(self):
@@ -42,7 +52,7 @@ class EnvironmentImportTest(unittest.TestCase):
                         'instances': pred_result["ins"]
                         }
         with open(target_file_path, 'w') as fp:
-            json.dump(pred_output, fp)
+            json.dump(pred_output, fp, cls=NpEncoder)
 
 
         
