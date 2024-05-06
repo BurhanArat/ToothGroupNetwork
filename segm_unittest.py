@@ -20,10 +20,10 @@ class EnvironmentImportTest(unittest.TestCase):
     
     def test_case(self):
     # In some cases, trimesh can change vertex order
-        path = '/home/burhan_arat/test/deneme.obj'
+        path = '/home/burhan_arat/orig_data/7373_lower.stl'
         path_target='/home/burhan_arat/test/'
-        checkpoint_path = '/home/burhan_arat/segm_ckpt/tgnet_fps.h5'
-        checkpoint_path_bdl = '/home/burhan_arat/segm_ckpt/tgnet_bdl.h5'
+        checkpoint_path = '/home/burhan_arat/segm_ckpts/tgnet_fps.h5'
+        checkpoint_path_bdl = '/home/burhan_arat/segm_ckpts/tgnet_bdl.h5'
         jaw='lower'
         model_name="tgnet"
 
