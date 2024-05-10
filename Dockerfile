@@ -8,7 +8,7 @@ WORKDIR /usr/src/app
 COPY . .
 
 # Install necessary tools including wget and git
-RUN apt-get update && apt-get install -y libgl1-mesa-dev
+RUN apt-get update && apt-get install -y libgl1-mesa-dev wget
 
 
 
