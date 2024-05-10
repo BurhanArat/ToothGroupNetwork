@@ -8,7 +8,7 @@ WORKDIR /usr/src/app
 COPY . .
 
 # Install necessary tools including wget and git
-RUN apt-get update && apt-get install -y wget git zip && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y wget git zip libgomp1
 
 
 #RUN git clone https://github.com/BurhanArat/ToothGroupNetwork.git
