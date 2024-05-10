@@ -1,0 +1,8 @@
+version: '3.4'
+
+services:
+  toothgroupnetworkmain:
+    image: toothgroupnetworkmain
+    build:
+      context: .
+      dockerfile: ./Dockerfile
