@@ -8,10 +8,11 @@ WORKDIR /usr/src/app
 COPY . .
 
 # Install necessary tools including wget and git
-RUN apt-get update && apt-get install -y wget git zip && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y wget git zip 
+#&& rm -rf /var/lib/apt/lists/*
 
 
-RUN git clone https://github.com/BurhanArat/ToothGroupNetwork.git
+#RUN git clone https://github.com/BurhanArat/ToothGroupNetwork.git
 
 
 # Install pip requirements
@@ -25,7 +26,7 @@ RUN wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh &
 ENV PATH /opt/conda/bin:$PATH
 
 COPY environment.yml .
-RUN conda env create -f environment.yml
+RUN conda env create -f environment.yaml
 
 
 
