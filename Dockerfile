@@ -8,7 +8,8 @@ WORKDIR /usr/src/app
 COPY . .
 
 # Install necessary tools including wget and git
-RUN apt-get update && apt-get install -y wget git zip libgomp1
+RUN apt-get update && apt-get install -y libgl1-mesa-dev
+
 
 
 #RUN git clone https://github.com/BurhanArat/ToothGroupNetwork.git
