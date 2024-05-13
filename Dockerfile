@@ -33,7 +33,7 @@ RUN conda env create -f environment.yaml
 SHELL ["conda", "run", "-n", "segmentation", "/bin/bash", "-c"]
 
 # Install the package from the Git repository in editable mode
-RUN pip3 install -e git+https://github.com/Silverster98/pointops#egg=pointops
+RUN pip3 install -r requirements.txt
 
 # Make port 80 available to the world outside this container
 EXPOSE 80
