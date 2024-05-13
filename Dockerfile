@@ -22,7 +22,7 @@ RUN wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh &
 
 
 # Set path to conda
-ENV PATH /opt/conda/segmentation/bin:$PATH
+ENV PATH /opt/conda/bin:$PATH
 
 COPY environment.yaml .
 RUN conda env create -f environment.yaml
@@ -36,7 +36,7 @@ SHELL ["conda", "run", "-n", "segmentation", "/bin/bash", "-c"]
 EXPOSE 80
 
 # Define environment variable
-ENV NAME World
+ENV LD_LIBRARY_PATH /opt/conda/lib:$LD_LIBRARY_PATH
 
 # Assume your application's entry point is setup in the repository
 CMD ["conda", "run", "-n", "segmentation", "python", "segm_unittest.py"]
