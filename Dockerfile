@@ -29,7 +29,7 @@ RUN conda env create -f environment.yaml
 
 
 # Make RUN commands use the new environment:
-SHELL ["conda", "run", "-n", "/bin/bash", "-c"]
+SHELL ["conda", "run", "-n", "segmentation","/bin/bash", "-c"]
 
 # Make port 80 available to the world outside this container
 EXPOSE 80
