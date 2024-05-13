@@ -32,10 +32,13 @@ RUN conda env create -f environment.yaml
 # Activate the Conda environment
 
 # Install the package from the Git repository in editable mode
+# Use Conda environment for subsequent commands
 SHELL ["conda", "run", "-n", "segmentation", "/bin/bash", "-c"]
 
-# Install the package from the Git repository in editable mode
-RUN pip install -e git+https://github.com/Silverster98/pointops#egg=pointops
+# Prepare directory and install the package from the Git repository in editable mode
+RUN if [ -d "/usr/src/app/src/pointops" ]; then rm -rf /usr/src/app/src/pointops; fi && \
+    pip install -e git+https://github.com/Silverster98/pointops#egg=pointops
+
 # Make port 80 available to the world outside this container
 EXPOSE 80
 
