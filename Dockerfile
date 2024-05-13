@@ -20,17 +20,16 @@ RUN wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh &
     rm Miniconda3-latest-Linux-x86_64.sh
 
 
-
-
+# Set path to conda
+ENV PATH /opt/conda/segmentation/bin:$PATH
 
 COPY environment.yaml .
 RUN conda env create -f environment.yaml
 
-# Set path to conda
-ENV PATH /opt/conda/segmentation/bin:$PATH
+
 
 # Make RUN commands use the new environment:
-SHELL ["conda", "run", "-n", "segmentation", "/bin/bash", "-c"]
+SHELL ["conda", "run", "-n", "/bin/bash", "-c"]
 
 # Make port 80 available to the world outside this container
 EXPOSE 80
