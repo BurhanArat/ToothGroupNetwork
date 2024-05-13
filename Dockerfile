@@ -8,7 +8,7 @@ WORKDIR /usr/src/app
 COPY . .
 
 # Install necessary tools including wget and git
-RUN apt-get update && apt-get install -y wget git zip libgomp1 libgl1-mesa-dev
+RUN apt-get update && apt-get install -y wget git zip libgomp libgl1-mesa-dev
 
 
 #RUN git clone https://github.com/BurhanArat/ToothGroupNetwork.git
@@ -22,7 +22,7 @@ RUN wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh &
 
 
 # Set path to conda
-ENV PATH /opt/conda/bin:$PATH
+ENV PATH /opt/conda/segmentation/bin:$PATH
 
 COPY environment.yaml .
 RUN conda env create -f environment.yaml
