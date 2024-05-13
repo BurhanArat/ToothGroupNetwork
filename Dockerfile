@@ -29,7 +29,11 @@ RUN conda env create -f environment.yaml
 
 
 # Make RUN commands use the new environment:
-CMD ["conda", "run", "-n", "segmentation", "pip", "install", "-e", "git+https://github.com/Silverster98/pointops#egg=pointops"]
+# Activate the Conda environment
+SHELL ["conda", "run", "-n", "segmentation", "/bin/bash", "-c"]
+
+# Install the package from the Git repository in editable mode
+RUN pip install -e git+https://github.com/Silverster98/pointops#egg=pointops
 
 # Make port 80 available to the world outside this container
 EXPOSE 80
