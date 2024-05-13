@@ -38,7 +38,7 @@ SHELL ["conda", "run", "-n", "segmentation", "/bin/bash", "-c"]
 # Prepare directory and install the package from the Git repository in editable mode
 
 
-CMD ["conda", "run", "-n", "segmentation", "pip", "install" ,"-e", "/external_libs/pointops/setup.py"]
+CMD ["conda", "run", "-n", "segmentation", "pip", "install" ,"-e", "./external_libs/pointops/setup.py"]
 # Make port 80 available to the world outside this container
 EXPOSE 80
 
