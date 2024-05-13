@@ -8,7 +8,8 @@ WORKDIR /usr/src/app
 COPY . .
 
 # Install necessary tools including wget and git
-RUN apt-get update && apt-get install -y wget git zip 
+RUN apt-get update && apt-get install -y wget git zip libgl1-mesa-dev libgomp1 && rm -rf /var/lib/apt/lists/*
+
 
 
 #RUN git clone https://github.com/BurhanArat/ToothGroupNetwork.git
@@ -29,13 +30,11 @@ RUN conda env create -f environment.yaml
 
 
 # Make RUN commands use the new environment:
-SHELL ["conda", "run", "-n", "segmentation","/bin/bash", "-c"]
+#SHELL ["conda", "run", "-n", "segmentation","/bin/bash", "-c"]
 
 # Make port 80 available to the world outside this container
 EXPOSE 80
 
-# Define environment variable
-ENV LD_LIBRARY_PATH /opt/conda/lib:$LD_LIBRARY_PATH
 
 # Assume your application's entry point is setup in the repository
 CMD ["conda", "run", "-n", "segmentation", "python", "segm_unittest.py"]
