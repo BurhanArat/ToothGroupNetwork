@@ -46,4 +46,4 @@ EXPOSE 80
 
 
 # Assume your application's entry point is setup in the repository
-CMD ["conda", "run", "-n", "segmentation", "python3", "-m ","unittest","unittest.py"]
+#CMD ["conda", "run", "-n", "segmentation", "python3", "-m ","unittest","unittest.py"]
